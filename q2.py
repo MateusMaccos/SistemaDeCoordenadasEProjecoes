@@ -36,9 +36,7 @@ def rotacionar(angle_x, angle_y, angle_z, x, y, z):
     rotated_points = []
     for i in range(len(x)):
         point = np.array([x[i], y[i], z[i]])
-        rotated_point = np.dot(
-            rotation_x, np.dot(rotation_y, np.dot(rotation_z, point))
-        )
+        rotated_point = np.dot(rotation_x, np.dot(rotation_y, np.dot(rotation_z, point)))
         rotated_points.append(rotated_point)
 
     return zip(*rotated_points)
@@ -66,12 +64,12 @@ def deslocar(dx, dy, dz, x, y, z):
     return x, y, z
 
 
-def plotaSolido(pontos, arestas):
+def plotaSolido(pontos, arestas, cor = 'b'):
     for aresta in arestas:
         x = [pontos[0][aresta[0]], pontos[0][aresta[1]]]
         y = [pontos[1][aresta[0]], pontos[1][aresta[1]]]
         z = [pontos[2][aresta[0]], pontos[2][aresta[1]]]
-        ax.plot(x, y, z, "b")
+        ax.plot(x, y, z, cor)
 
 
 class Cone:
@@ -127,9 +125,9 @@ class Cone:
             sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
         )
 
-    def plota_cone(self):
+    def plota_cone(self, cor = 'b'):
         # Plotar o cone
-        plotaSolido([self.pontosX, self.pontosY, self.pontosZ], self.arestas)
+        plotaSolido([self.pontosX, self.pontosY, self.pontosZ], self.arestas, cor)
 
 
 class Cubo:
@@ -196,8 +194,9 @@ class Cubo:
         self.formarBases()
         self.formarArestasVerticais()
 
-    def plota_cubo(self):
-        plotaSolido([self.x, self.y, self.z], self.arestas)
+    def plota_cubo(self, cor = 'b'):
+        
+        plotaSolido([self.x, self.y, self.z], self.arestas, cor)
 
 
 class Tronco_piramide:
@@ -294,8 +293,8 @@ class Tronco_piramide:
             sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
         )
 
-    def plota_tronco(self):
-        plotaSolido([self.x, self.y, self.z], self.arestas)
+    def plota_tronco(self, cor = 'blue'):
+        plotaSolido([self.x, self.y, self.z], self.arestas, cor)
 
 
 class Esfera:
@@ -348,8 +347,8 @@ class Esfera:
             angle_x, angle_y, angle_z, self.x, self.y, self.z
         )
 
-    def plota_esfera(self):
-        plotaSolido([self.x, self.y, self.z], self.arestas)
+    def plota_esfera(self, cor = "b"):
+        plotaSolido([self.x, self.y, self.z], self.arestas, cor)
 
 
 class Cilindro:
@@ -377,6 +376,7 @@ class Cilindro:
         # Obter as dimensões dos dados
         num_rows, num_cols = x_var.shape
 
+        cont = 0
         # Percorrer as células da grade e plotar os segmentos de linha
         for i in range(num_rows - 1):
             for j in range(num_cols - 1):
@@ -395,9 +395,13 @@ class Cilindro:
                 posicaov3 = len(self.x) - 2
                 posicaov4 = len(self.x) - 1
 
-                self.arestas.append([posicaov1, posicaov2])
-                self.arestas.append([posicaov2, posicaov3])
-                self.arestas.append([posicaov3, posicaov4])
+                if cont < resolucao - 1:
+                    self.arestas.append([posicaov1, posicaov2])  # H
+                    cont += 1
+
+                self.arestas.append([posicaov2, posicaov3])  # V
+                self.arestas.append([posicaov3, posicaov4])  # H
+               
 
     def escalar_cilindro(self, sx, sy, sz):
         self.x, self.y, self.z = escalar(
@@ -412,28 +416,32 @@ class Cilindro:
             angle_x, angle_y, angle_z, self.x, self.y, self.z
         )
 
-    def plota_cilindro(self):
-        plotaSolido([self.x, self.y, self.z], self.arestas)
+    def plota_cilindro(self, cor = 'b'):
+        plotaSolido([self.x, self.y, self.z], self.arestas, cor)
 
 
 # Cone #ROTACIONADO
 radius = 1.0
 height = 2 * radius
 num_slices = 15
-ponto_inicial_cone = [3, 6, 4]
+ponto_inicial_cone = [9, 6, 4]
 
 cone = Cone(radius, height, num_slices, ponto_inicial_cone)
 cone.gerar_cone()
-cone.rotacionar_cone(90, 0, 0)
 cone.plota_cone()
+cone.rotacionar_cone(90, 0, 0)
+cone.plota_cone(cor = 'g')
 
-# Cubo #ESCALADO
+# Cubo #ESCALADO e DESLOCADO
 raio_cubo = 1
 ponto_inicial_cubo = [-6, -8, -7]
 
 cubo = Cubo(raio_cubo, ponto_inicial_cubo)
 cubo.gera_cubo()
 cubo.plota_cubo()
+cubo.deslocar_cubo(1,0,1)
+cubo.plota_cubo(cor = 'y')
+
 
 # cubo.escalar_cubo(2, 2, 2)
 # cubo.plota_cubo()
@@ -443,7 +451,8 @@ tronco = Tronco_piramide(2, 1, 3, (-9, -3, -8))
 tronco.gera_tronco()
 tronco.plota_tronco()
 # posicao_final = (2, 3, 1)
-# tronco.rotacionar_tronco(45, 0, 0)
+tronco.rotacionar_tronco(45, 0, 0)
+tronco.plota_tronco("g")
 # tronco.plota_tronco()
 
 # Esfera
@@ -456,10 +465,10 @@ esfera.gera_esfera()
 esfera.plota_esfera()
 
 # Aplica a escala de fator 2 em todos os eixos
-# esfera.escalar_esfera(2, 2, 2)
-# esfera.plota_esfera()
+esfera.escalar_esfera(2, 2, 2)
+esfera.plota_esfera('r')
 
-# Cilindro  #ESCALADO (n do jeito que é pra ser)
+# Cilindro  #ESCALADO 
 raio_cilindro = 1
 altura_cilindro = 2
 ponto_inicial_cilindro = [2, 4, 3]
@@ -467,8 +476,9 @@ cilindro = Cilindro(raio_cilindro, altura_cilindro, ponto_inicial_cilindro)
 cilindro.gera_cilindro()
 cilindro.plota_cilindro()
 
-# cilindro.escalar_cilindro(2, 2, 2)  # esse valor 2 é o valor do "fator"
-# cilindro.plota_cilindro()
+
+cilindro.escalar_cilindro(2, 2, 2,)  # esse valor 2 é o valor do "fator"
+cilindro.plota_cilindro("r")
 
 ax.set_xlabel("X")
 ax.set_ylabel("Y")

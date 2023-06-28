@@ -10,65 +10,65 @@ def plotaSolido(ax, pontos, arestas, color="g"):
         ax.plot(x, y, z, color)
 
 
-def rotacionar(angle_x, angle_y, angle_z, x, y, z):
-    angle_x = np.radians(angle_x)
-    angle_y = np.radians(angle_y)
-    angle_z = np.radians(angle_z)
+# def rotacionar(angle_x, angle_y, angle_z, x, y, z):
+#     angle_x = np.radians(angle_x)
+#     angle_y = np.radians(angle_y)
+#     angle_z = np.radians(angle_z)
 
-    rotation_x = np.array(
-        [
-            [1, 0, 0],
-            [0, np.cos(angle_x), -np.sin(angle_x)],
-            [0, np.sin(angle_x), np.cos(angle_x)],
-        ]
-    )
+#     rotation_x = np.array(
+#         [
+#             [1, 0, 0],
+#             [0, np.cos(angle_x), -np.sin(angle_x)],
+#             [0, np.sin(angle_x), np.cos(angle_x)],
+#         ]
+#     )
 
-    rotation_y = np.array(
-        [
-            [np.cos(angle_y), 0, np.sin(angle_y)],
-            [0, 1, 0],
-            [-np.sin(angle_y), 0, np.cos(angle_y)],
-        ]
-    )
+#     rotation_y = np.array(
+#         [
+#             [np.cos(angle_y), 0, np.sin(angle_y)],
+#             [0, 1, 0],
+#             [-np.sin(angle_y), 0, np.cos(angle_y)],
+#         ]
+#     )
 
-    rotation_z = np.array(
-        [
-            [np.cos(angle_z), -np.sin(angle_z), 0],
-            [np.sin(angle_z), np.cos(angle_z), 0],
-            [0, 0, 1],
-        ]
-    )
-    rotated_points = []
-    for i in range(len(x)):
-        point = np.array([x[i], y[i], z[i]])
-        rotated_point = np.dot(
-            rotation_x, np.dot(rotation_y, np.dot(rotation_z, point))
-        )
-        rotated_points.append(rotated_point)
+#     rotation_z = np.array(
+#         [
+#             [np.cos(angle_z), -np.sin(angle_z), 0],
+#             [np.sin(angle_z), np.cos(angle_z), 0],
+#             [0, 0, 1],
+#         ]
+#     )
+#     rotated_points = []
+#     for i in range(len(x)):
+#         point = np.array([x[i], y[i], z[i]])
+#         rotated_point = np.dot(
+#             rotation_x, np.dot(rotation_y, np.dot(rotation_z, point))
+#         )
+#         rotated_points.append(rotated_point)
 
-    return zip(*rotated_points)
-
-
-def escalar(sx, sy, sz, x, y, z, ponto_inicial):
-    # Cria matriz de escala
-    matriz_escala = np.array([[sx, 0, 0], [0, sy, 0], [0, 0, sz]])
-    pontos_scaled = matriz_escala.dot([x, y, z])
-
-    # Ajustar a posição dos pontos escalados
-    pontos_scaled[0] += ponto_inicial[0] * (1 - sx)
-    pontos_scaled[1] += ponto_inicial[1] * (1 - sy)
-    pontos_scaled[2] += ponto_inicial[2] * (1 - sz)
-    return pontos_scaled[0], pontos_scaled[1], pontos_scaled[2]
+#     return zip(*rotated_points)
 
 
-def deslocar(dx, dy, dz, x, y, z):
-    T = np.array([[1, 0, 0, dx], [0, 1, 0, dy], [0, 0, 1, dz], [0, 0, 0, 1]])
-    complete_row = np.full((1, len(x)), 1)[0]
-    new_matrix = T.dot([x, y, z, complete_row])
-    x = new_matrix[0]
-    y = new_matrix[1]
-    z = new_matrix[2]
-    return x, y, z
+# def escalar(sx, sy, sz, x, y, z, ponto_inicial):
+#     # Cria matriz de escala
+#     matriz_escala = np.array([[sx, 0, 0], [0, sy, 0], [0, 0, sz]])
+#     pontos_scaled = matriz_escala.dot([x, y, z])
+
+#     # Ajustar a posição dos pontos escalados
+#     pontos_scaled[0] += ponto_inicial[0] * (1 - sx)
+#     pontos_scaled[1] += ponto_inicial[1] * (1 - sy)
+#     pontos_scaled[2] += ponto_inicial[2] * (1 - sz)
+#     return pontos_scaled[0], pontos_scaled[1], pontos_scaled[2]
+
+
+# def deslocar(dx, dy, dz, x, y, z):
+#     T = np.array([[1, 0, 0, dx], [0, 1, 0, dy], [0, 0, 1, dz], [0, 0, 0, 1]])
+#     complete_row = np.full((1, len(x)), 1)[0]
+#     new_matrix = T.dot([x, y, z, complete_row])
+#     x = new_matrix[0]
+#     y = new_matrix[1]
+#     z = new_matrix[2]
+#     return x, y, z
 
 
 class Cubo:
@@ -117,18 +117,18 @@ class Cubo:
                 self.y.append(self.base[j][1])
                 self.z.append(self.base[j][2] + bases * self.raio)
 
-    def rotacionar_cubo(self, angle_x, angle_y, angle_z):
-        self.x, self.y, self.z = rotacionar(
-            angle_x, angle_y, angle_z, self.x, self.y, self.z
-        )
+    # def rotacionar_cubo(self, angle_x, angle_y, angle_z):
+    #     self.x, self.y, self.z = rotacionar(
+    #         angle_x, angle_y, angle_z, self.x, self.y, self.z
+    #     )
 
-    def deslocar_cubo(self, dx, dy, dz):
-        self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
+    # def deslocar_cubo(self, dx, dy, dz):
+    #     self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
 
-    def escalar_cubo(self, sx, sy, sz):
-        self.x, self.y, self.z = escalar(
-            sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
-        )
+    # def escalar_cubo(self, sx, sy, sz):
+    #     self.x, self.y, self.z = escalar(
+    #         sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
+    #     )
 
     def gera_cubo(self):
         self.generate_cubo()
@@ -179,18 +179,18 @@ class Cone:
             for circles in range(len(x[i])):
                 self.arestas.append([i, i + self.num_slices * circles])
 
-    def rotacionar_cone(self, angle_x, angle_y, angle_z):
-        self.pontosX, self.pontosY, self.pontosZ = rotacionar(
-            angle_x, angle_y, angle_z, self.pontosX, self.pontosY, self.pontosZ
-        )
+    # def rotacionar_cone(self, angle_x, angle_y, angle_z):
+    #     self.pontosX, self.pontosY, self.pontosZ = rotacionar(
+    #         angle_x, angle_y, angle_z, self.pontosX, self.pontosY, self.pontosZ
+    #     )
 
-    def deslocar_cone(self, dx, dy, dz):
-        self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
+    # def deslocar_cone(self, dx, dy, dz):
+    #     self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
 
-    def escalar_cone(self, sx, sy, sz):
-        self.x, self.y, self.z = escalar(
-            sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
-        )
+    # def escalar_cone(self, sx, sy, sz):
+    #     self.x, self.y, self.z = escalar(
+    #         sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
+    #     )
 
     def plota_cone(self, ax):
         # Plotar o cone
@@ -222,6 +222,7 @@ class Cilindro:
         # Obter as dimensões dos dados
         num_rows, num_cols = x_var.shape
 
+        cont = 0
         # Percorrer as células da grade e plotar os segmentos de linha
         for i in range(num_rows - 1):
             for j in range(num_cols - 1):
@@ -240,22 +241,25 @@ class Cilindro:
                 posicaov3 = len(self.x) - 2
                 posicaov4 = len(self.x) - 1
 
-                self.arestas.append([posicaov1, posicaov2])
-                self.arestas.append([posicaov2, posicaov3])
-                self.arestas.append([posicaov3, posicaov4])
+                if cont < resolucao - 1:
+                    self.arestas.append([posicaov1, posicaov2])  # H
+                    cont += 1
 
-    def escalar_cilindro(self, sx, sy, sz):
-        self.x, self.y, self.z = escalar(
-            sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
-        )
+                self.arestas.append([posicaov2, posicaov3])  # V
+                self.arestas.append([posicaov3, posicaov4])  # H
 
-    def deslocar_cilindro(self, dx, dy, dz):
-        self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
+    # def escalar_cilindro(self, sx, sy, sz):
+    #     self.x, self.y, self.z = escalar(
+    #         sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
+    #     )
 
-    def rotacionar_cilindro(self, angle_x, angle_y, angle_z):
-        self.x, self.y, self.z = rotacionar(
-            angle_x, angle_y, angle_z, self.x, self.y, self.z
-        )
+    # def deslocar_cilindro(self, dx, dy, dz):
+    #     self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
+
+    # def rotacionar_cilindro(self, angle_x, angle_y, angle_z):
+    #     self.x, self.y, self.z = rotacionar(
+    #         angle_x, angle_y, angle_z, self.x, self.y, self.z
+    #     )
 
     def plota_cilindro(self, ax):
         plotaSolido(ax, [self.x, self.y, self.z], self.arestas)
@@ -342,18 +346,18 @@ class Tronco_piramide:
         self.formarBases()
         self.formarArestasVerticais()
 
-    def deslocar_tronco(self, dx, dy, dz):
-        self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
+    # def deslocar_tronco(self, dx, dy, dz):
+    #     self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
 
-    def rotacionar_tronco(self, angle_x, angle_y, angle_z):
-        self.x, self.y, self.z = rotacionar(
-            angle_x, angle_y, angle_z, self.x, self.y, self.z
-        )
+    # def rotacionar_tronco(self, angle_x, angle_y, angle_z):
+    #     self.x, self.y, self.z = rotacionar(
+    #         angle_x, angle_y, angle_z, self.x, self.y, self.z
+    #     )
 
-    def escalar_tronco(self, sx, sy, sz):
-        self.x, self.y, self.z = escalar(
-            sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
-        )
+    # def escalar_tronco(self, sx, sy, sz):
+    #     self.x, self.y, self.z = escalar(
+    #         sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
+    #     )
 
     def plota_tronco(self, ax):
         plotaSolido(ax, [self.x, self.y, self.z], self.arestas)
@@ -396,23 +400,24 @@ class Esfera:
                     [j * (num_pontos + 1) + i, (j + 1) * (num_pontos + 1) + i]
                 )
 
-    def escalar_esfera(self, sx, sy, sz):
-        self.x, self.y, self.z = escalar(
-            sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
-        )
+    # def escalar_esfera(self, sx, sy, sz):
+    #     self.x, self.y, self.z = escalar(
+    #         sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
+    #     )
 
-    def deslocar_esfera(self, dx, dy, dz):
-        self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
+    # def deslocar_esfera(self, dx, dy, dz):
+    #     self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
 
-    def rotacionar_esfera(self, angle_x, angle_y, angle_z):
-        self.x, self.y, self.z = rotacionar(
-            angle_x, angle_y, angle_z, self.x, self.y, self.z
-        )
+    # def rotacionar_esfera(self, angle_x, angle_y, angle_z):
+    #     self.x, self.y, self.z = rotacionar(
+    #         angle_x, angle_y, angle_z, self.x, self.y, self.z
+    #     )
 
     def plota_esfera(self, ax):
         plotaSolido(ax, [self.x, self.y, self.z], self.arestas)
 
 
+# centro de massa dos objetos(média vértices)
 def calculateCenterMass(vertexList):
     return np.mean(vertexList, axis=0)
 
@@ -438,7 +443,7 @@ cubo = Cubo(4, [-6, -8, -7])
 cubo.gera_cubo()
 cubeVertexList = np.array([cubo.x, cubo.y, cubo.z]).T
 
-cone = Cone(1, 2, 5, [3, 6, 4])
+cone = Cone(1, 2, 5, [8, 6, 4])
 cone.gerar_cone()
 coneVertexList = np.array([cone.pontosX, cone.pontosY, cone.pontosZ]).T
 
@@ -478,13 +483,13 @@ eye = np.array([-7, -1, 6])
 
 # Calculando os vetores N, U e V da câmera
 at = np.array(soma)
-N = at - eye
-up = np.array([0, 1, 0])
-V = np.cross(up, N)
-U = np.cross(V, N)
-N = N / np.linalg.norm(N)
-V = V / np.linalg.norm(V)
-U = U / np.linalg.norm(U)
+n = at - eye
+aux = np.array([0, 1, 0])
+v = np.cross(aux, n)
+u = np.cross(v, n)
+N = n / np.linalg.norm(n)
+V = v / np.linalg.norm(v)
+U = u / np.linalg.norm(u)
 
 # Criação da figura e do subplot 3D
 fig = plt.figure()

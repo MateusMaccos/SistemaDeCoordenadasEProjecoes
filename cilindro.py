@@ -5,65 +5,65 @@ fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
 
 
-def rotacionar(angle_x, angle_y, angle_z, x, y, z):
-    angle_x = np.radians(angle_x)
-    angle_y = np.radians(angle_y)
-    angle_z = np.radians(angle_z)
+# def rotacionar(angle_x, angle_y, angle_z, x, y, z):
+#     angle_x = np.radians(angle_x)
+#     angle_y = np.radians(angle_y)
+#     angle_z = np.radians(angle_z)
 
-    rotation_x = np.array(
-        [
-            [1, 0, 0],
-            [0, np.cos(angle_x), -np.sin(angle_x)],
-            [0, np.sin(angle_x), np.cos(angle_x)],
-        ]
-    )
+#     rotation_x = np.array(
+#         [
+#             [1, 0, 0],
+#             [0, np.cos(angle_x), -np.sin(angle_x)],
+#             [0, np.sin(angle_x), np.cos(angle_x)],
+#         ]
+#     )
 
-    rotation_y = np.array(
-        [
-            [np.cos(angle_y), 0, np.sin(angle_y)],
-            [0, 1, 0],
-            [-np.sin(angle_y), 0, np.cos(angle_y)],
-        ]
-    )
+#     rotation_y = np.array(
+#         [
+#             [np.cos(angle_y), 0, np.sin(angle_y)],
+#             [0, 1, 0],
+#             [-np.sin(angle_y), 0, np.cos(angle_y)],
+#         ]
+#     )
 
-    rotation_z = np.array(
-        [
-            [np.cos(angle_z), -np.sin(angle_z), 0],
-            [np.sin(angle_z), np.cos(angle_z), 0],
-            [0, 0, 1],
-        ]
-    )
-    rotated_points = []
-    for i in range(len(x)):
-        point = np.array([x[i], y[i], z[i]])
-        rotated_point = np.dot(
-            rotation_x, np.dot(rotation_y, np.dot(rotation_z, point))
-        )
-        rotated_points.append(rotated_point)
+#     rotation_z = np.array(
+#         [
+#             [np.cos(angle_z), -np.sin(angle_z), 0],
+#             [np.sin(angle_z), np.cos(angle_z), 0],
+#             [0, 0, 1],
+#         ]
+#     )
+#     rotated_points = []
+#     for i in range(len(x)):
+#         point = np.array([x[i], y[i], z[i]])
+#         rotated_point = np.dot(
+#             rotation_x, np.dot(rotation_y, np.dot(rotation_z, point))
+#         )
+#         rotated_points.append(rotated_point)
 
-    return zip(*rotated_points)
-
-
-def escalar(sx, sy, sz, x, y, z, ponto_inicial):
-    # Cria matriz de escala
-    matriz_escala = np.array([[sx, 0, 0], [0, sy, 0], [0, 0, sz]])
-    pontos_scaled = matriz_escala.dot([x, y, z])
-
-    # Ajustar a posição dos pontos escalados
-    pontos_scaled[0] += ponto_inicial[0] * (1 - sx)
-    pontos_scaled[1] += ponto_inicial[1] * (1 - sy)
-    pontos_scaled[2] += ponto_inicial[2] * (1 - sz)
-    return pontos_scaled[0], pontos_scaled[1], pontos_scaled[2]
+#     return zip(*rotated_points)
 
 
-def deslocar(dx, dy, dz, x, y, z):
-    T = np.array([[1, 0, 0, dx], [0, 1, 0, dy], [0, 0, 1, dz], [0, 0, 0, 1]])
-    complete_row = np.full((1, len(x)), 1)[0]
-    new_matrix = T.dot([x, y, z, complete_row])
-    x = new_matrix[0]
-    y = new_matrix[1]
-    z = new_matrix[2]
-    return x, y, z
+# def escalar(sx, sy, sz, x, y, z, ponto_inicial):
+#     # Cria matriz de escala
+#     matriz_escala = np.array([[sx, 0, 0], [0, sy, 0], [0, 0, sz]])
+#     pontos_scaled = matriz_escala.dot([x, y, z])
+
+#     # Ajustar a posição dos pontos escalados
+#     pontos_scaled[0] += ponto_inicial[0] * (1 - sx)
+#     pontos_scaled[1] += ponto_inicial[1] * (1 - sy)
+#     pontos_scaled[2] += ponto_inicial[2] * (1 - sz)
+#     return pontos_scaled[0], pontos_scaled[1], pontos_scaled[2]
+
+
+# def deslocar(dx, dy, dz, x, y, z):
+#     T = np.array([[1, 0, 0, dx], [0, 1, 0, dy], [0, 0, 1, dz], [0, 0, 0, 1]])
+#     complete_row = np.full((1, len(x)), 1)[0]
+#     new_matrix = T.dot([x, y, z, complete_row])
+#     x = new_matrix[0]
+#     y = new_matrix[1]
+#     z = new_matrix[2]
+#     return x, y, z
 
 
 def plotaSolido(pontos, arestas):
@@ -89,6 +89,7 @@ class Cilindro:
 
         # Criando os pontos para a superfície do cilindro
         theta = np.linspace(0, 2 * np.pi, resolucao)
+        # replicação da base pela altura
         z_var = np.linspace(
             self.ponto_inicial[2], self.ponto_inicial[2] + self.altura, resolucao
         )
@@ -100,6 +101,7 @@ class Cilindro:
         num_rows, num_cols = x_var.shape
 
         # Percorrer as células da grade e plotar os segmentos de linha
+        cont = 0 
         for i in range(num_rows - 1):
             for j in range(num_cols - 1):
                 # Obter as coordenadas dos vértices da célula atual(Faz o retângulo e interliga)
@@ -117,22 +119,27 @@ class Cilindro:
                 posicaov3 = len(self.x) - 2
                 posicaov4 = len(self.x) - 1
 
-                self.arestas.append([posicaov1, posicaov2])  # H
+                #desenhar o primeiro circulo
+                
+                if cont < resolucao - 1:
+                    self.arestas.append([posicaov1, posicaov2])  # H
+                    cont += 1
+
                 self.arestas.append([posicaov2, posicaov3])  # V
                 self.arestas.append([posicaov3, posicaov4])  # H
 
-    def escalar_cilindro(self, sx, sy, sz):
-        self.x, self.y, self.z = escalar(
-            sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
-        )
+    # def escalar_cilindro(self, sx, sy, sz):
+    #     self.x, self.y, self.z = escalar(
+    #         sx, sy, sz, self.x, self.y, self.z, self.ponto_inicial
+    #     )
 
-    def deslocar_cilindro(self, dx, dy, dz):
-        self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
+    # def deslocar_cilindro(self, dx, dy, dz):
+    #     self.x, self.y, self.z = deslocar(dx, dy, dz, self.x, self.y, self.z)
 
-    def rotacionar_cilindro(self, angle_x, angle_y, angle_z):
-        self.x, self.y, self.z = rotacionar(
-            angle_x, angle_y, angle_z, self.x, self.y, self.z
-        )
+    # def rotacionar_cilindro(self, angle_x, angle_y, angle_z):
+    #     self.x, self.y, self.z = rotacionar(
+    #         angle_x, angle_y, angle_z, self.x, self.y, self.z
+    #     )
 
     def plota_cilindro(self):
         plotaSolido([self.x, self.y, self.z], self.arestas)
@@ -145,6 +152,8 @@ ponto_inicial_cilindro = [2, 4, 3]
 cilindro = Cilindro(raio_cilindro, altura_cilindro, ponto_inicial_cilindro)
 cilindro.gera_cilindro()
 cilindro.plota_cilindro()
+
+
 
 ax.set_xlabel("X")
 ax.set_ylabel("Y")
